@@ -12,11 +12,11 @@ Example::
     
     bit = Bitty('sqlite:///home/code/my_database.db')
     
-    bitty.add('people', name='Claris', says='Moof!', age=37)
-    bitty.add('people', name='John Doe', says='No comment.', age=37)
+    bit.add('people', name='Claris', says='Moof!', age=37)
+    bit.add('people', name='John Doe', says='No comment.', age=37)
     
     # Select all.
-    for row in bitty.find('people'):
+    for row in bit.find('people'):
         print row['name']
     
     bit.close()
