@@ -35,7 +35,7 @@ __version__ = ('0', '5', '0', 'alpha')
 
 
 FILESYSTEM_DSN = re.compile(r'^(?P<adapter>\w+)://(?P<path>.*)$')
-DAEMON_DSN = re.compile(r'^(?P<adapter>\w+)://(?P<user>[\w\d_.-]+):(?P<password>[\w\d_.-]*?)@(?P<host>.*?)/(?P<database>.*?)$')
+DAEMON_DSN = re.compile(r'^(?P<adapter>\w+)://(?P<user>[\w\d_.-]+):(?P<password>[\w\d_.-]*?)@(?P<host>.*?):(?P<port>.*?)/(?P<database>.*?)$')
 
 
 class BittyError(Exception): pass
@@ -248,7 +248,7 @@ class PostgresAdapter(BaseSQLAdapter):
         details = match.groupdict()
         
         import psycopg2
-        return psycopg2.connect("dbname='%s' user='%s' host='%s' password='%s'" % (details['database'], details['user'], details['host'], details['password']))
+        return psycopg2.connect("dbname='%s' user='%s' host='%s' port='%s' password='%s'" % (details['database'], details['user'], details['host'], details['port'], details['password']))
     
     def _get_column_names(self, table):
         query = "SELECT a.attname AS column \
@@ -291,6 +291,8 @@ class MySQLAdapter(BaseSQLAdapter):
                 connection_details['user'] = details['user']
             elif key == 'host':
                 connection_details['host'] = details['host']
+            elif key == 'port' and details['port'] != '':
+                connection_details['port'] = int(details['port'])
             elif key == 'password':
                 connection_details['passwd'] = details['password']
         
